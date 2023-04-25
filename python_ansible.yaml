@@ -1,0 +1,28 @@
+- name: Read Excel file with defined row headers and columns in YAML format
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - name: Read Excel file
+    ansible_excel_parse:
+      file_path: "inputdata.xlsx"
+      # row_headers:
+      #   - "name"
+      #   - "ip"
+      #   - "initial"
+
+    register: result
+
+
+  - name: Copy output
+    ansible.builtin.copy:
+      content: "{{ result.yaml_output }}"
+      dest: content.yaml
+
+  - name: Include vars
+    ansible.builtin.include_vars:
+      file: content.yaml
+      name: reader
+
+  - name: Display YAML output
+    ansible.builtin.debug:
+      msg: "{{ reader.Adam }}"
